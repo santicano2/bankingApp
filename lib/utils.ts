@@ -2,6 +2,7 @@
 import { type ClassValue, clsx } from "clsx";
 import qs from "query-string";
 import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -193,3 +194,63 @@ export const getTransactionStatus = (date: Date) => {
 
   return date > twoDaysAgo ? "Processing" : "Success";
 };
+
+export const authFormSchema = (type: string) =>
+  z.object({
+    // SIGN UP
+    firstName:
+      type === "sign-in"
+        ? z.string().optional()
+        : z.string().min(3, {
+            message: "El nombre debe tener al menos 3 caracteres",
+          }),
+    lastName:
+      type === "sign-in"
+        ? z.string().optional()
+        : z.string().min(3, {
+            message: "El apellido debe tener al menos 3 caracteres",
+          }),
+    address1:
+      type === "sign-in"
+        ? z.string().optional()
+        : z.string().min(10, {
+            message: "La dirección debe tener al menos 10 caracteres",
+          }),
+    state:
+      type === "sign-in"
+        ? z.string().optional()
+        : z.string().min(2, {
+            message: "La provincia debe tener al menos 2 caracteres",
+          }),
+    postalCode:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string()
+            .min(3, {
+              message: "El Código Postal debe tener al menos 3 caracteres",
+            })
+            .max(6, {
+              message: "El Código Postal debe tener entre 3 y 6 caracteres",
+            }),
+    dateOfBirth:
+      type === "sign-in"
+        ? z.string().optional()
+        : z.string().min(3, {
+            message: "La fecha de nacimiento es obligatoria",
+          }),
+    dni:
+      type === "sign-in"
+        ? z.string().optional()
+        : z.string().min(3, {
+            message: "El DNI debe tener al menos 8 caracteres",
+          }),
+
+    // BOTH
+    email: z.string().email({
+      message: "Ingresar un email valido",
+    }),
+    password: z.string().min(8, {
+      message: "La contraseña debe tener al menos 8 caracteres",
+    }),
+  });
