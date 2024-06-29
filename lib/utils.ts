@@ -216,6 +216,12 @@ export const authFormSchema = (type: string) =>
         : z.string().min(10, {
             message: "La dirección debe tener al menos 10 caracteres",
           }),
+    city:
+      type === "sign-in"
+        ? z.string().optional()
+        : z.string().min(10, {
+            message: "La ciudad debe tener al menos 10 caracteres",
+          }),
     state:
       type === "sign-in"
         ? z.string().optional()
