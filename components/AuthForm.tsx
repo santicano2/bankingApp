@@ -14,6 +14,7 @@ import { authFormSchema } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import CustomInput from "./CustomInput";
+import { signIn, signUp } from "@/lib/actions/user.actions";
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
@@ -38,16 +39,16 @@ const AuthForm = ({ type }: { type: string }) => {
       // Sign up with Appwrite & create plain link token
 
       if (type === "sign-up") {
-        //const newUser = await signUp(data);
-        //setUser(newUser);
+        const newUser = await signUp(data);
+        setUser(newUser);
       }
 
       if (type === "sign-in") {
-        //const response = await signIn({
-        //  email: data.email,
-        //  password: data.password,
-        //});
-        //if (response) router.push("/");
+        const response = await signIn({
+          email: data.email,
+          password: data.password,
+        });
+        if (response) router.push("/");
       }
     } catch (error) {
       console.log(error);
