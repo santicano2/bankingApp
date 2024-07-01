@@ -245,11 +245,11 @@ export const authFormSchema = (type: string) =>
         : z.string().min(3, {
             message: "La fecha de nacimiento es obligatoria",
           }),
-    dni:
+    ssn:
       type === "sign-in"
         ? z.string().optional()
         : z.string().min(3, {
-            message: "El DNI debe tener al menos 8 caracteres",
+            message: "El SSN debe tener al menos 3 caracteres",
           }),
 
     // BOTH
