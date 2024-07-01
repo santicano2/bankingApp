@@ -67,9 +67,9 @@ export const formatDateTime = (dateString: Date) => {
 };
 
 export function formatAmount(amount: number): string {
-  const formatter = new Intl.NumberFormat("es-AR", {
+  const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "ARS",
+    currency: "USD",
     minimumFractionDigits: 2,
   });
 
@@ -225,9 +225,14 @@ export const authFormSchema = (type: string) =>
     state:
       type === "sign-in"
         ? z.string().optional()
-        : z.string().min(2, {
-            message: "La provincia debe tener al menos 2 caracteres",
-          }),
+        : z
+            .string()
+            .min(2, {
+              message: "La provincia debe tener al menos 2 caracteres",
+            })
+            .max(2, {
+              message: "La provincia debe tener 2 caracteres",
+            }),
     postalCode:
       type === "sign-in"
         ? z.string().optional()
@@ -236,8 +241,8 @@ export const authFormSchema = (type: string) =>
             .min(3, {
               message: "El Código Postal debe tener al menos 3 caracteres",
             })
-            .max(6, {
-              message: "El Código Postal debe tener entre 3 y 6 caracteres",
+            .max(5, {
+              message: "El Código Postal debe tener entre 3 y 5 caracteres",
             }),
     dateOfBirth:
       type === "sign-in"
@@ -248,8 +253,8 @@ export const authFormSchema = (type: string) =>
     ssn:
       type === "sign-in"
         ? z.string().optional()
-        : z.string().min(3, {
-            message: "El SSN debe tener al menos 3 caracteres",
+        : z.string().min(4, {
+            message: "El SSN debe tener al menos 4 caracteres",
           }),
 
     // BOTH

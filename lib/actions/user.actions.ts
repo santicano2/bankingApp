@@ -27,14 +27,21 @@ export const signIn = async ({ email, password }: signInProps) => {
 
     const response = await account.createEmailPasswordSession(email, password);
 
+    cookies().set("appwrite-session", response.secret, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+    });
+
     return parseStringify(response);
   } catch (error) {
     console.error("Error", error);
   }
 };
 
-export const signUp = async (userData: SignUpParams) => {
-  const { email, password, firstName, lastName } = userData;
+export const signUp = async ({ password, ...userData }: SignUpParams) => {
+  const { email, firstName, lastName } = userData;
 
   let newUserAccount;
 
@@ -48,14 +55,14 @@ export const signUp = async (userData: SignUpParams) => {
       `${firstName} ${lastName}`
     );
 
-    if (!newUserAccount) throw new Error("Error creando usuario");
+    if (!newUserAccount) throw new Error("Error creating user");
 
     const dwollaCustomerUrl = await createDwollaCustomer({
       ...userData,
       type: "personal",
     });
 
-    if (!dwollaCustomerUrl) throw new Error("Error creando Dwolla customer");
+    if (!dwollaCustomerUrl) throw new Error("Error creating Dwolla customer");
 
     const dwollaCustomerId = extractCustomerIdFromUrl(dwollaCustomerUrl);
 
@@ -115,10 +122,10 @@ export const createLinkToken = async (user: User) => {
       user: {
         client_user_id: user.$id,
       },
-      client_name: user.name,
+      client_name: `${user.firstName} ${user.lastName}`,
       products: ["auth"] as Products[],
       language: "es",
-      country_codes: ["US", "AR"] as CountryCode[],
+      country_codes: ["US"] as CountryCode[],
     };
 
     const response = await plaidClient.linkTokenCreate(tokenParams);
