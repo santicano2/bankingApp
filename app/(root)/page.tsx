@@ -6,8 +6,10 @@ import { getAccount, getAccounts } from "@/lib/actions/bank.actions";
 import HeaderBox from "@/components/HeaderBox";
 import TotalBalanceBox from "@/components/TotalBalanceBox";
 import RightSidebar from "@/components/RightSidebar";
+import RecentTransactions from "@/components/RecentTransactions";
 
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
+  const currentPage = Number(page as string) || 1;
   const loggedIn = await getLoggedInUser();
   const accounts = await getAccounts({ userId: loggedIn.$id });
 
@@ -24,7 +26,7 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
             type="greeting"
             title="Bienvenido"
             user={loggedIn?.firstName || "Invitado"}
-            subtext="Ingresa y maneja tu cuenta bancaria"
+            subtext="Ingresa y maneja tus cuentas bancarias"
           />
 
           <TotalBalanceBox
@@ -33,7 +35,12 @@ const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
             totalCurrentBalance={accounts?.totalCurrentBalance}
           />
         </header>
-        TRANSACCIONES RECIENTES
+        <RecentTransactions
+          accounts={accountsData}
+          transactions={accounts?.transactions}
+          appwriteItemId={appwriteItemId}
+          page={currentPage}
+        />
       </div>
 
       <RightSidebar
